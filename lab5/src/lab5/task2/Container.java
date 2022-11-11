@@ -44,6 +44,11 @@ public interface Container {
     void transferFrom(Container container);
 
     /**
+     * Clears all elements in container
+     */
+    void clear();
+
+    /**
      * Return all the tasks stored in the Container.
      *
      * @return The list of the tasks stored in the Container.
