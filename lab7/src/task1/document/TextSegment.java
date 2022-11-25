@@ -1,4 +1,4 @@
-package lab7.task1.document;
+package task1.document;
 
 /**
  * Represents a text segment of a document that needs to be parsed.

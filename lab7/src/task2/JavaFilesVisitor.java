@@ -1,4 +1,4 @@
-package lab7.task2;
+package task2;
 
 import java.io.IOException;
 import java.nio.file.*;

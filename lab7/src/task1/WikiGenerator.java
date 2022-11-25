@@ -1,6 +1,6 @@
-package lab7.task1;
+package task1;
 
-import lab7.task1.document.TextSegment;
+import task1.document.TextSegment;
 
 import java.util.List;
 
