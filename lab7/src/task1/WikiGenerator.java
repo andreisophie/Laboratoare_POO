@@ -1,6 +1,6 @@
 package task1;
 
-import task1.document.TextSegment;
+import task1.document.documentVisitors.TextSegment;
 
 import java.util.List;
 

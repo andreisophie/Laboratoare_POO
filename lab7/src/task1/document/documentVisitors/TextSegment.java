@@ -1,4 +1,6 @@
-package task1.document;
+package task1.document.documentVisitors;
+
+import task1.document.textSegments.DocumentVisitor;
 
 /**
  * Represents a text segment of a document that needs to be parsed.
@@ -15,4 +17,5 @@ public abstract class TextSegment {
     }
 
     // TODO add method for applying the visitor
+    abstract void accept(DocumentVisitor visitor);
 }

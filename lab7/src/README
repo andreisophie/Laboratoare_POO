@@ -16,7 +16,7 @@ Types of text parts you need to convert:
     * markdown: *text* or _text_
 * Bold:
     * dokuwiki: **text**
-    *markdown: **text** or __text__
+    * markdown: **text** or __text__
 * External urls:
     * dokuwiki: [[www.google.com|Google]]
     * markdown: [an example](http://www.example.com/)
