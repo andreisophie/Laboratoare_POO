@@ -1,6 +1,7 @@
 package task1;
 
 import task1.document.documentVisitors.TextSegment;
+import task1.document.textSegments.DokuWikiVisitor;
 
 import java.util.List;
 
@@ -17,6 +18,11 @@ public class WikiGenerator {
 
     public StringBuilder getDokuWikiDocument() {
         // TODO apply dokuwiki visitor on the text segments
+        StringBuilder text = new StringBuilder();
+        DokuWikiVisitor dokuWikiVisitor = new DokuWikiVisitor();
+        for (TextSegment textSegment : textSegments) {
+            text.append(textSegment.accept(dokuWikiVisitor));
+        }
         return null;
     }
 

@@ -6,13 +6,13 @@ import task1.document.documentVisitors.PlainTextSegment;
 import task1.document.documentVisitors.UrlSegment;
 
 public interface DocumentVisitor {
-    public void visit(ItalicTextSegment italicTextSegment);
+    StringBuilder visit(ItalicTextSegment italicTextSegment);
 
-    public void visit(BoldTextSegment boldTextSegment);
+    StringBuilder visit(BoldTextSegment boldTextSegment);
 
-    public void visit(UrlSegment urlSegment);
+    StringBuilder visit(UrlSegment urlSegment);
 
-    public void visit(PlainTextSegment plainTextSegment);
+    StringBuilder visit(PlainTextSegment plainTextSegment);
 
-    public StringBuilder getDocument();
+    StringBuilder getDocument();
 }

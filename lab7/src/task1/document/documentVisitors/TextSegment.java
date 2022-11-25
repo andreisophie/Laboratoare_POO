@@ -17,5 +17,5 @@ public abstract class TextSegment {
     }
 
     // TODO add method for applying the visitor
-    abstract void accept(DocumentVisitor visitor);
+    public abstract StringBuilder accept(DocumentVisitor visitor);
 }

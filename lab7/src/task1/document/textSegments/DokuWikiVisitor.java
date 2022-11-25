@@ -7,23 +7,43 @@ import task1.document.documentVisitors.UrlSegment;
 
 public class DokuWikiVisitor implements DocumentVisitor {
     @Override
-    public void visit(ItalicTextSegment italicTextSegment) {
+    public StringBuilder visit(ItalicTextSegment italicTextSegment) {
+        StringBuilder italicText = new StringBuilder();
 
+        italicText.append("*");
+        italicText.append(italicTextSegment.getContent());
+        italicText.append("*");
+
+        return italicText;
     }
 
     @Override
-    public void visit(BoldTextSegment boldTextSegment) {
+    public StringBuilder visit(BoldTextSegment boldTextSegment) {
+        StringBuilder boldText = new StringBuilder();
 
+        boldText.append("**");
+        boldText.append(boldTextSegment.getContent());
+        boldText.append("**");
+
+        return boldText;
     }
 
     @Override
-    public void visit(UrlSegment urlSegment) {
+    public StringBuilder visit(UrlSegment urlSegment) {
+        StringBuilder urlText = new StringBuilder();
 
+        urlText.append("[");
+        urlText.append(urlSegment.getUrl());
+        urlText.append("](");
+        urlText.append(urlSegment.getDescription());
+        urlText.append(")");
+
+        return urlText;
     }
 
     @Override
-    public void visit(PlainTextSegment plainTextSegment) {
-
+    public StringBuilder visit(PlainTextSegment plainTextSegment) {
+        return new StringBuilder(plainTextSegment.getContent());
     }
 
     @Override
