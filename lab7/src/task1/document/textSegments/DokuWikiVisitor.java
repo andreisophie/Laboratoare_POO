@@ -10,9 +10,9 @@ public class DokuWikiVisitor implements DocumentVisitor {
     public StringBuilder visit(ItalicTextSegment italicTextSegment) {
         StringBuilder italicText = new StringBuilder();
 
-        italicText.append("*");
+        italicText.append("//");
         italicText.append(italicTextSegment.getContent());
-        italicText.append("*");
+        italicText.append("//");
 
         return italicText;
     }
@@ -32,11 +32,11 @@ public class DokuWikiVisitor implements DocumentVisitor {
     public StringBuilder visit(UrlSegment urlSegment) {
         StringBuilder urlText = new StringBuilder();
 
-        urlText.append("[");
+        urlText.append("[[");
         urlText.append(urlSegment.getUrl());
-        urlText.append("](");
+        urlText.append("|");
         urlText.append(urlSegment.getDescription());
-        urlText.append(")");
+        urlText.append("]]");
 
         return urlText;
     }
