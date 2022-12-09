@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.Map.Entry;
 
 import EvenSets.EvenSet;
 import EvenSets.LinkedEvenSet;
