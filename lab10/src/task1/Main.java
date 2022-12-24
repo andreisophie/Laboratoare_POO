@@ -1,12 +1,9 @@
-package oop.lab.task1;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -30,43 +27,64 @@ import java.util.function.Supplier;
 
 */
 
-// TODO: Implement the following class
 class MultiMapValue<K, V> {
+    private HashMap<K, ArrayList<V>> map;
+
+    public MultiMapValue() {
+        map = new HashMap<>();
+    }
 
     public void add(K key, V value) {
-
+        List<V> current = getValues(key);
+        if (current == null) {
+            ArrayList<V> newList = new ArrayList<>();
+            newList.add(value);
+            map.put(key, newList);
+            return;
+        }
+        current.add(value);
     }
 
     public void addAll(K key, List<V> values) {
-
+        for (V value : values) {
+            add(key, value);
+        }
     }
 
     public void addAll(MultiMapValue<K, V> map) {
-
+        for (Map.Entry<K, ArrayList<V>> entry : map.map.entrySet()) {
+            addAll(entry.getKey(), entry.getValue());
+        }
     }
 
     public V getFirst(K key) {
-        return null;
+        ArrayList<V> list = (ArrayList<V>) getValues(key);
+        if (list == null) {
+            return null;
+        }
+        return list.get(0);
     }
 
     public List<V> getValues(K key) {
-        return new ArrayList<>();
+        return map.get(key);
     }
 
     public boolean containsKey(K key) {
-        return false;
+        return map.containsKey(key);
     }
 
     public boolean isEmpty() {
-        return false;
+        return map.isEmpty();
     }
 
     public List<V> remove(K key) {
-        return new ArrayList<>();
+        ArrayList<V> removedList = (ArrayList<V>) getValues(key);
+        map.remove(key);
+        return removedList;
     }
 
     public int size() {
-        return 0;
+        return map.size();
     }
 
 }
