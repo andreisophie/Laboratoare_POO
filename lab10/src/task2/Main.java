@@ -1,5 +1,3 @@
-package oop.lab.task2;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,17 +23,38 @@ import java.util.List;
  */
 
 
-// TODO: Discuss with the teaching assistant why it was necessary to use a bounded type: < T extends Comparable<T>>
+// Discuss with the teaching assistant why it was necessary to use a bounded type: < T extends Comparable<T>>
+// Because we need to compare the values in the nodes to construct BST
 class Node<T extends Comparable<T>> {
 
     private T value;
     private Node<T> right;
     private Node<T> left;
-
-    // TODO: Generate constructor, getter and setters
+    public Node(T value, Node<T> right, Node<T> left) {
+        this.value = value;
+        this.right = right;
+        this.left = left;
+    }
+    public T getValue() {
+        return value;
+    }
+    public void setValue(T value) {
+        this.value = value;
+    }
+    public Node<T> getRight() {
+        return right;
+    }
+    public void setRight(Node<T> right) {
+        this.right = right;
+    }
+    public Node<T> getLeft() {
+        return left;
+    }
+    public void setLeft(Node<T> left) {
+        this.left = left;
+    }    
 }
 
-// TODO: Discuss with the teaching assistant why it was necessary to use a bounded type: < T extends Comparable<T>>
 interface Tree<T extends Comparable<T>> {
 
     void addValue(T value);
@@ -49,32 +68,73 @@ interface Tree<T extends Comparable<T>> {
     boolean isEmpty();
 }
 
-//TODO: Add your implementation
 class TreeImpl<T extends Comparable<T>> implements Tree<T> {
+    private Node<T> root;
+    private int size;
 
     @Override
     public void addValue(T value) {
+        Node<T> newNode = new Node<T>(value, null, null);
+        size++;
+        if (root == null) {
+            root = newNode;
+            return;
+        }
+        Node<T> parent = null;
+        Node<T> current = root;
+        while (current != null) {
+            if (current.getValue().compareTo(newNode.getValue()) < 0) {
+                parent = current;
+                current = current.getRight();
+            } else {
+                parent = current;
+                current = current.getLeft();
+            }
+        }
+        if (parent.getValue().compareTo(newNode.getValue()) < 0) {
+            parent.setRight(newNode);
+        } else {
+            parent.setLeft(newNode);
+        }
 
     }
 
     @Override
     public void addAll(List<T> values) {
-
+        for (T value : values) {
+            addValue(value);
+        }
     }
 
     @Override
     public HashSet<T> getValues(T inf, T sup) {
-        return new HashSet<>();
+        HashSet<T> newSet = new HashSet<>();
+        addRecursive(newSet, root, inf, sup);
+        return newSet;
+    }
+
+    private void addRecursive(HashSet<T> set, Node<T> current, T inf, T sup) {
+        if (current == null) {
+            return;
+        }
+
+        addRecursive(set, current.getLeft(), inf, sup);
+
+        if (current.getValue().compareTo(inf) >= 0 && current.getValue().compareTo(sup) <= 0) {
+            set.add(current.getValue());
+        }
+
+        addRecursive(set, current.getRight(), inf, sup);
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }
 
