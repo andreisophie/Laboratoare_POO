@@ -3,6 +3,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Collector;
+
 class Business {
     private final Set<Employee> employees = new HashSet<>();
     private final List<Project> projects = new ArrayList<>();
@@ -24,15 +25,11 @@ class Business {
     }
 
     public Set<Employee> getEmployees() {
-        // TODO: get an immutable set of data
-
-        return null;
+        return Collections.unmodifiableSet(employees);
     }
 
     public List<Project> getProjects() {
-        // TODO: get an immutable list of data
-
-        return null;
+        return Collections.unmodifiableList(projects);
     }
 }
 
@@ -48,13 +45,11 @@ class Bank {
     }
 
     public Set<Business> getClients() {
-        // TODO: get an immutable set of data
-
-        return null;
+        return Collections.unmodifiableSet(clients);
     }
 }
 
-class Employee {
+class Employee implements Comparable<Employee> {
     private final String name;
     private final Integer age;
     private final String city;
@@ -110,15 +105,11 @@ class Employee {
     }
 
     public Set<Account> getAccounts() {
-        // TODO: get an immutable set of data
-
-        return null;
+        return Collections.unmodifiableSet(accounts);
     }
 
     public List<Project> getProjects() {
-        // TODO: get an immutable list of data
-
-        return null;
+        return Collections.unmodifiableList(projects);
     }
 
     @Override
@@ -154,6 +145,11 @@ class Employee {
     public int hashCode() {
         return Objects.hash(getName(), getGender(), getCity(), getAge());
     }
+
+    @Override
+    public int compareTo(Employee o) {
+        return name.compareTo(o.getName());
+    }
 }
 
 class BankReport {
@@ -164,46 +160,93 @@ class BankReport {
     public static int getNumberOfCustomers(Bank bank) {
         // All the customers that have accounts at the bank
         // A customer is an Employee that works for a Business (client of the bank)
-
-        return 0;
+        int totalCustomers = 0;
+        for (Business bussiness : bank.getClients()) {
+            totalCustomers += bussiness.getEmployees().size();
+        }
+        return totalCustomers;
     }
 
     public static int getNumberOfAccounts(Bank bank) {
         // Accounts of all the customers of the bank
-
-        return 0;
+        int totalAccounts = 0;
+        for (Business bussiness : bank.getClients()) {
+            for (Employee employee : bussiness.getEmployees()) {
+                totalAccounts += employee.getAccounts().size();
+            }
+        }
+        return totalAccounts;
     }
 
     public static SortedSet<Employee> getCustomersSorted(Bank bank) {
         // Return the set of customers in alphabetical order
+        SortedSet<Employee> sortedCustomers = new TreeSet<>();
 
-        return null;
+        for (Business business : bank.getClients()) {
+            sortedCustomers.addAll(business.getEmployees());
+        }
 
+        return sortedCustomers;
     }
 
     public static double getTotalSumInAccounts(Bank bank) {
         // Sum of all customers' accounts balances
+        double totalSum = 0;
 
-        return 0.0d;
+        for (Business bussiness : bank.getClients()) {
+            for (Employee employee : bussiness.getEmployees()) {
+                for (Account account : employee.getAccounts()) {
+                    totalSum += account.getBalance();
+                }
+            }
+        }
+
+        return totalSum;
     }
 
     public static SortedSet<Account> getAccountsSortedBySum(Bank bank) {
         // The set of all accounts, ordered by current account balance
         // and if the balance is equal, sort by id
+        SortedSet<Account> sortedAccounts = new TreeSet<>();
 
-        return null;
+        for (Business bussiness : bank.getClients()) {
+            for (Employee employee : bussiness.getEmployees()) {
+                sortedAccounts.addAll(employee.getAccounts());
+            }
+        }
+
+        return sortedAccounts;
     }
 
     public static Map<Employee, Collection<Account>> getCustomerAccounts(Bank bank) {
         // Return a map of all the customers with their respective accounts
 
-        return null;
+        Map<Employee, Collection<Account>> customerAccounts = new HashMap<>();
+
+        for (Business business : bank.getClients()) {
+            for (Employee employee : business.getEmployees()) {
+                customerAccounts.put(employee, employee.getAccounts());
+            }
+        }
+
+        return customerAccounts;
     }
 
     public static Map<String, List<Employee>> getCustomersByCity(Bank bank) {
         // Map all the customers to their respective cities
 
-        return null;
+        Map<String, List<Employee>> customersByCity = new HashMap<>();
+
+        for (Business business : bank.getClients()) {
+            for (Employee employee : business.getEmployees()) {
+                if (!customersByCity.containsKey(employee.getCity())) {
+                    customersByCity.put(employee.getCity(), new ArrayList<>());
+                }
+                customersByCity.get(employee.getCity()).add(employee);
+            }
+        }
+
+        return customersByCity;
     }
 }
 
@@ -211,14 +254,26 @@ class BusinessReport {
 
     public static Map<Disability, List<Employee>> getEmployeesOnSameDisability(Business business) {
         // Get employees and map them on the type of disability they possess
+        Map<Disability, List<Employee>> disabilityMap = business.getEmployees().stream().collect(Collectors.groupingBy(e -> e.getDisability()));
 
-        return null;
+        return disabilityMap;
     }
 
     public static long getNumberOfDifferentProjectsWorkedByCurrentFemaleEmployees(Business business) {
         // Get employees, filter by gender, get their projects without duplicates, count
+        List<Employee> femaleEmployees = business.getEmployees().stream().filter(e -> e.getGender().equals(Gender.FEMALE)).collect(Collectors.toList());
 
-        return 0l;
+        ArrayList<Project> projects = new ArrayList<>();
+
+        for (Employee employee : femaleEmployees) {
+            for (Project project : employee.getProjects()) {
+                if (!projects.contains(project)) {
+                    projects.add(project);
+                }
+            }
+        }
+
+        return projects.size();
     }
 
     public static Map<Religion, Map<Gender, List<Employee>>> getEmployeesOnSameReligionAndGender(Business business) {
@@ -228,7 +283,15 @@ class BusinessReport {
                                -> value -> List<Employee>)
            Hint: use Collectors.groupingBy(Function, Collector) */
 
-        return null;
+        Map<Religion, List<Employee>> religionMap = business.getEmployees().stream().collect(Collectors.groupingBy(e -> e.getReligion()));
+
+        Map<Religion, Map<Gender, List<Employee>>> religionGenderMap = new HashMap<>();
+
+        for (Map.Entry<Religion, List<Employee>> entry : religionMap.entrySet()) {
+            religionGenderMap.put(entry.getKey(), entry.getValue().stream().collect(Collectors.groupingBy(e -> e.getGender())));
+        }
+
+        return religionGenderMap;
     }
 }
 
@@ -340,7 +403,7 @@ class Project {
     }
 }
 
-class Account {
+class Account implements Comparable<Account> {
     private final int id;
     private double balance;
     private final double maximumAmountToWithdraw;
@@ -408,6 +471,19 @@ class Account {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getBalance(), getMaximumAmountToWithdraw());
+    }
+
+    @Override
+    public int compareTo(Account o) {
+        if (balance > o.getBalance())
+            return 1;
+        if (balance < o.getBalance())
+            return -1;
+        if (id > o.getId())
+            return 1;
+        if (id < o.getId())
+            return -1;
+        return 0;
     }
 }
 
